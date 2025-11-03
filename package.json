@@ -1,0 +1,56 @@
+{
+  "name": "@alekstar79/vue3-calendar-component",
+  "version": "1.0.0",
+  "description": "A responsive, customizable calendar component",
+  "author": "Aleksey Tarasenko <alekstar79@yandex.ru>",
+  "license": "MIT",
+  "type": "module",
+  "private": false,
+  "keywords": [
+    "vue3",
+    "calendar",
+    "component"
+  ],
+  "homepage": "https://github.com/alekstar79/vue3-calendar-component#readme",
+  "bugs": {
+    "url": "https://github.com/alekstar79/vue3-calendar-component/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alekstar79/vue3-calendar-component.git"
+  },
+  "main": "./dist/calendar-component.umd.js",
+  "module": "./dist/calendar-component.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/calendar-component.es.js",
+      "require": "./dist/calendar-component.umd.js"
+    }
+  },
+  "files": [
+    "dist/*",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rf ../demo && vite build --config vite.config.js",
+    "build:lib": "rm -rf ../dist && vite build --config vite.lib.config.js",
+    "preview": "vite preview --config vite.config.js",
+    "prepublishOnly": "npm run build:lib",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "peerDependencies": {
+    "vite": "^4.5.0",
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2",
+    "@vitejs/plugin-vue": "^4.4.0",
+    "vite": "^4.5.0",
+    "vue": "^3.3.0"
+  }
+}
