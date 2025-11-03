@@ -9,7 +9,7 @@ A modern, responsive, and customizable calendar component built with Vue 3 Compo
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange)]()
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
 
-**![Marquee Canvas](review.gif)**
+**![Vue3 Calendar Component](review.gif)**
 
 ## 🎮 Demo
 
