@@ -3,7 +3,7 @@
 A modern, responsive, and customizable calendar component built with Vue 3 Composition API. Features a sleek design with smooth animations, internationalization support, and comprehensive date manipulation utilities.
 
 [![Vue 3 Calendar](https://img.shields.io/badge/Vue-3.3+-green.svg)]()
-[![NPM](https://img.shields.io/npm/v/@alekstar79/vue3-calendar.svg)](https://www.npmjs.com/package/@alekstar79/vue3-calendar)
+[![NPM](https://img.shields.io/npm/v/@alekstar79/vue3-calendar-component.svg)](https://www.npmjs.com/package/@alekstar79/vue3-calendar-component)
 [![GitHub repo](https://img.shields.io/badge/github-repo-green.svg?style=flat)](https://github.com/alekstar79/vue3-calendar)
 [![Build](https://img.shields.io/badge/Build-Vite-orange.svg)]()
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange)]()
