@@ -6,6 +6,14 @@ A modern, responsive, and customizable calendar component built with Vue 3 Compo
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Build](https://img.shields.io/badge/Build-Vite-orange.svg)
 
+
+**![Marquee Canvas](review.gif)**
+
+## 🎮 Demo
+
+Check out the live demo: [Vue3 Calendar](https://alekstar79.github.io/vue3-calendar)
+
+
 ## ✨ Features
 
 - **Vue 3 Composition API** - Built with modern Vue 3 and Composition API
@@ -156,7 +164,7 @@ The package includes a full-featured demo application that showcases:
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-1. Fo1. rk the project
+1. Fork the project
 2. Create your feature branch (git checkout -b feature/AmazingFeature)
 3. Commit your changes (git commit -m 'Add some AmazingFeature')
 4. Push to the branch (git push origin feature/AmazingFeature)
