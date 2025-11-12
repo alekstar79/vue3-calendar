@@ -352,7 +352,7 @@ watch(() => props.eventLog, (newLog) => {
 
 .event-log-container {
   max-height: 400px;
-  overflow-y: auto;
+  overflow: hidden auto;
   padding-right: 8px;
 }
 
