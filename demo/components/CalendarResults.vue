@@ -92,31 +92,28 @@
   </section>
 </template>
 
-<script setup>
-/**
- * @file Calendar Results Component
- * @component CalendarResults2
- * @description Display panel for selected date information and event logging
- */
-
+<script lang="ts" setup>
 import { ref, watch } from 'vue'
+import { parseDate } from '../../src/composable/date-utils'
 
-/**
- * Component props definition
- */
-const props = defineProps({
-  selectedDate: {
-    type: String,
-    default: null
-  },
-  eventLog: {
-    type: Array,
-    default: () => []
-  },
-  currentLocale: {
-    type: String,
-    default: 'ru-RU'
-  }
+interface EventLog {
+  id: number,
+  timestamp: string,
+  message: string
+}
+
+interface Props {
+  selectedDate: string | null
+  eventLog: EventLog[]
+  currentLocale: string
+  isDarkTheme: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  selectedDate: null,
+  eventLog: () => [],
+  currentLocale: 'ru-RU',
+  isDarkTheme: false
 })
 
 /**
@@ -130,10 +127,10 @@ const eventLogEntries = ref([...props.eventLog])
  * @param {string} dateString - Date string to format
  * @returns {string}
  */
-const formatDateForLocale = (dateString) => {
+const formatDateForLocale = (dateString: string): string => {
   if (!dateString) return ''
 
-  const date = new Date(dateString + 'T00:00:00')
+  const date = parseDate(dateString)
 
   return date.toLocaleDateString(props.currentLocale, {
     weekday: 'long',
@@ -148,11 +145,10 @@ const formatDateForLocale = (dateString) => {
  * @param {string} dateString - Date string
  * @returns {string}
  */
-const getDateTimestamp = (dateString) => {
-  if (!dateString) return ''
-
-  return new Date(dateString + 'T00:00:00')
-      .getTime().toString()
+const getDateTimestamp = (dateString: string): string => {
+  return dateString
+    ? parseDate(dateString).getTime().toString()
+    : ''
 }
 
 watch(() => props.selectedDate, (newDate) => {
@@ -164,7 +160,7 @@ watch(() => props.eventLog, (newLog) => {
 }, { deep: true })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .calendar-results-section {
   height: 100%;
   padding: 0;
@@ -184,6 +180,15 @@ watch(() => props.eventLog, (newLog) => {
   border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
   border: 1px solid rgba(255, 255, 255, .8);
+  transition: all 0.3s ease;
+}
+
+/* Темная тема для карточек */
+:deep(.dark-theme) .result-card,
+:deep(.dark-theme) .event-log-card {
+  background: #1e293b;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(55, 65, 81, 0.5);
 }
 
 .result-card {
@@ -200,6 +205,11 @@ watch(() => props.eventLog, (newLog) => {
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .card-header {
+  border-bottom-color: #374151;
 }
 
 .result-title,
@@ -208,6 +218,12 @@ watch(() => props.eventLog, (newLog) => {
   font-size: 1.3em;
   font-weight: 700;
   margin: 0;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .result-title,
+:deep(.dark-theme) .event-log-title {
+  color: #f1f5f9;
 }
 
 .card-icon {
@@ -218,6 +234,12 @@ watch(() => props.eventLog, (newLog) => {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .card-icon {
+  background: #374151;
+  color: #818cf8;
 }
 
 .result-content {
@@ -230,6 +252,11 @@ watch(() => props.eventLog, (newLog) => {
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .info-item {
+  border-bottom-color: #374151;
 }
 
 .info-item:last-child {
@@ -240,12 +267,22 @@ watch(() => props.eventLog, (newLog) => {
   font-weight: 600;
   color: #64748b;
   font-size: .9em;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .info-label {
+  color: #94a3b8;
 }
 
 .info-value {
   color: #1e293b;
   font-weight: 500;
   text-align: right;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .info-value {
+  color: #f1f5f9;
 }
 
 .timestamp {
@@ -255,6 +292,13 @@ watch(() => props.eventLog, (newLog) => {
   padding: 4px 8px;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .timestamp {
+  background: #374151;
+  border-color: #4b5563;
+  color: #cbd5e1;
 }
 
 .no-selection-state,
@@ -262,11 +306,22 @@ watch(() => props.eventLog, (newLog) => {
   text-align: center;
   padding: 40px 20px;
   color: #94a3b8;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .no-selection-state,
+:deep(.dark-theme) .empty-log-state {
+  color: #64748b;
 }
 
 .no-data-icon {
   color: #cbd5e1;
   margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .no-data-icon {
+  color: #4b5563;
 }
 
 .no-selection-message,
@@ -275,12 +330,24 @@ watch(() => props.eventLog, (newLog) => {
   font-weight: 600;
   margin-bottom: 8px;
   color: #64748b;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .no-selection-message,
+:deep(.dark-theme) .empty-log-message {
+  color: #94a3b8;
 }
 
 .no-selection-hint,
 .empty-log-hint {
   font-size: 0.9em;
   color: #94a3b8;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .no-selection-hint,
+:deep(.dark-theme) .empty-log-hint {
+  color: #64748b;
 }
 
 .event-log-container {
@@ -297,11 +364,19 @@ watch(() => props.eventLog, (newLog) => {
   transition: all 0.3s ease;
 }
 
+:deep(.dark-theme) .event-log-entry {
+  border-bottom-color: #374151;
+}
+
 .event-log-entry:hover {
   background: #f8fafc;
   margin: 0 -16px;
   padding: 16px;
   border-radius: 12px;
+}
+
+:deep(.dark-theme) .event-log-entry:hover {
+  background: #374151;
 }
 
 .event-log-entry:last-child {
@@ -325,12 +400,23 @@ watch(() => props.eventLog, (newLog) => {
   border-radius: 6px;
   min-width: 70px;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .event-timestamp {
+  background: #374151;
+  color: #818cf8;
 }
 
 .event-description {
   color: #475569;
   flex: 1;
   text-align: left;
+  transition: all 0.3s ease;
+}
+
+:deep(.dark-theme) .event-description {
+  color: #cbd5e1;
 }
 
 .event-indicator {
@@ -348,13 +434,25 @@ watch(() => props.eventLog, (newLog) => {
 .event-log-container::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
+  transition: all 0.3s ease;
 }
 .event-log-container::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
+  transition: all 0.3s ease;
 }
 .event-log-container::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+:deep(.dark-theme) .event-log-container::-webkit-scrollbar-track {
+  background: #374151;
+}
+:deep(.dark-theme) .event-log-container::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+:deep(.dark-theme) .event-log-container::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 
 @media (max-width: 1024px) {

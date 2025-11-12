@@ -1,0 +1,165 @@
+@use 'variables' as vars;
+
+/**
+ * Reusable SCSS mixins for calendar styling
+ */
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin transition($properties: all) {
+  transition: $properties vars.$transition-base;
+}
+
+@mixin focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  &:focus-visible {
+    outline: 2px solid vars.$color-primary;
+    outline-offset: 2px;
+  }
+}
+
+@mixin button-reset {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+@mixin input-reset {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+@mixin responsive($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: vars.$breakpoint-sm - 1px) {
+      @content;
+    }
+  } @else if $breakpoint == 'sm' {
+    @media (min-width: vars.$breakpoint-sm) and (max-width: vars.$breakpoint-md - 1px) {
+      @content;
+    }
+  } @else if $breakpoint == 'md' {
+    @media (min-width: vars.$breakpoint-md) and (max-width: vars.$breakpoint-lg - 1px) {
+      @content;
+    }
+  } @else if $breakpoint == 'lg' {
+    @media (min-width: vars.$breakpoint-lg) and (max-width: vars.$breakpoint-xl - 1px) {
+      @content;
+    }
+  } @else if $breakpoint == 'xl' {
+    @media (min-width: vars.$breakpoint-xl) and (max-width: vars.$breakpoint-2xl - 1px) {
+      @content;
+    }
+  } @else if $breakpoint == '2xl' {
+    @media (min-width: vars.$breakpoint-2xl) {
+      @content;
+    }
+  }
+}
+
+@mixin hover-effect {
+  @include transition(background-color, color, transform);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+@mixin active-effect {
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+@mixin disabled-state {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+@mixin shadow($level: 'md') {
+  @if $level == 'sm' {
+    box-shadow: vars.$shadow-sm;
+  } @else if $level == 'md' {
+    box-shadow: vars.$shadow-md;
+  } @else if $level == 'lg' {
+    box-shadow: vars.$shadow-lg;
+  } @else if $level == 'xl' {
+    box-shadow: vars.$shadow-xl;
+  }
+}
+
+@mixin gradient($start, $end) {
+  background: linear-gradient(135deg, $start 0%, $end 100%);
+}
+
+@mixin skeletonLoader {
+  background: linear-gradient(90deg, vars.$color-gray-200 25%, vars.$color-gray-100 50%, vars.$color-gray-200 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

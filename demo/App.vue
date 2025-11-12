@@ -1,5 +1,5 @@
 <template>
-  <div id="application-root">
+  <div id="application-root" :class="{ 'dark-theme': isDarkTheme }">
     <div class="application-container">
       <header class="application-header">
         <div class="header-content">
@@ -21,24 +21,28 @@
             <CalendarControls
               v-model:initial-date="initialDate"
               v-model:selected-locale="locale"
-              @set-current-date="handleSetCurrentDate"
+              :is-dark-theme="isDarkTheme"
               @clear-selection="handleClearSelection"
+              @toggle-theme="toggleTheme"
             />
           </div>
 
           <div class="calendar-section">
             <Calendar
+              ref="calendar"
               :initial-date="initialDate"
               :locale="locale"
-              @date-selected="handleDateSelection"
+              :is-dark-theme="isDarkTheme"
+              @date-selected="onDateSelected"
             />
           </div>
 
           <div class="results-section">
             <CalendarResults
-              :selected-date="lastSelectedDate"
+              :selected-date="selectedDate"
               :event-log="applicationEventLog"
               :current-locale="locale"
+              :is-dark-theme="isDarkTheme"
             />
           </div>
         </div>
@@ -47,44 +51,22 @@
   </div>
 </template>
 
-<script setup>
-/**
- * @file Demo Application Main Component
- * @component App
- * @description Main demo application showcasing the calendar component
- */
-
-import { ref, watch } from 'vue'
-import CalendarControls from '@/components/CalendarControls'
-import CalendarResults from '@/components/CalendarResults'
-import Calendar from '@/components/Calendar'
+<script setup lang="ts">
+import { ref, watch, useTemplateRef } from 'vue'
+import { formatDate } from '../src/composable/date-utils'
+import { SupportedLocale } from '../dist-lib/composable/locales'
+import CalendarControls from './components/CalendarControls.vue'
+import CalendarResults from './components/CalendarResults.vue'
+import Calendar from '../src/components/Calendar.vue'
 
 const initialDate = ref('2025-01-01')
-const locale = ref('ru-RU')
-const lastSelectedDate = ref(null)
+const locale = ref<SupportedLocale>('ru-RU')
+const selectedDate = ref(null)
 const applicationEventLog = ref([])
+const calendar = useTemplateRef<typeof Calendar>('calendar')
+const isDarkTheme = ref(false)
 
-/**
- * @param {string} selectedDate - Selected date in YYYY-MM-DD format
- */
-const handleDateSelection = (selectedDate) => {
-  lastSelectedDate.value = selectedDate
-  addEventToLog(`Date selected: ${selectedDate}`)
-}
-
-const handleSetCurrentDate = () => {
-  addEventToLog('Initial date set to current date')
-}
-
-const handleClearSelection = () => {
-  lastSelectedDate.value = null
-  addEventToLog('Date selection cleared')
-}
-
-/**
- * @param {string} message - Event message to log
- */
-const addEventToLog = (message) => {
+const addEventToLog = (message: string) => {
   const currentTime = new Date()
   const formattedTime = currentTime.toLocaleTimeString()
 
@@ -100,9 +82,29 @@ const addEventToLog = (message) => {
   }
 }
 
+const toggleTheme = () => {
+  isDarkTheme.value = !isDarkTheme.value
+  addEventToLog(`Theme changed to ${isDarkTheme.value ? 'dark' : 'light'}`)
+}
+
+const onDateSelected = (date: Date | null) => {
+  if (date) {
+    selectedDate.value = formatDate(date)
+    addEventToLog(`Date selected: ${selectedDate.value}`)
+  } else {
+    selectedDate.value = null
+  }
+}
+
+const handleClearSelection = () => {
+  calendar.value?.clearSelection()
+  addEventToLog('Date selection cleared')
+}
+
 watch(initialDate, (newDate) => {
   if (newDate) {
     addEventToLog(`Initial date changed to: ${newDate}`)
+    selectedDate.value = null
   }
 })
 
@@ -111,23 +113,56 @@ watch(locale, (newLocale) => {
 })
 </script>
 
-<style>
+<style lang="scss">
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --danger-hover: #dc2626;
+
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
   min-height: 100vh;
-  color: #1a1a1a;
+  color: var(--gray-800);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: var(--transition);
+}
+
+body.dark-theme {
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  color: var(--gray-200);
 }
 
 #application-root {
   min-height: 100vh;
   padding: 20px;
+  transition: var(--transition);
 }
 
 .application-container {
@@ -141,14 +176,27 @@ body {
     0 0 0 1px rgba(255, 255, 255, .2);
   overflow: hidden;
   position: relative;
+  transition: var(--transition);
+}
+
+.dark-theme .application-container {
+  background: rgba(30, 41, 59, 0.95);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(55, 65, 81, 0.5);
+  color: var(--gray-200);
 }
 
 .application-header {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
   padding: 25px 40px;
   position: relative;
   overflow: hidden;
+}
+
+.dark-theme .application-header {
+  background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
 }
 
 .header-content {
