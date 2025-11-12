@@ -36,12 +36,12 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run --silent",
     "coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run build:lib && npm test:run",
+    "prepublishOnly": "npm run build:lib && npm run test:run",
     "pub:dry-run": "npm run build:lib && npm publish --dry-run",
     "pub:beta": "npm run build:lib && npm publish --tag beta",
     "pub:patch": "npm version patch && npm run build:lib && npm publish",
     "pub:minor": "npm version minor && npm run build:lib && npm publish",
-    "pub:major": "npm version major && npm run build:lib"
+    "pub:major": "npm version major && npm run build:lib && npm publish"
   },
   "dependencies": {
     "vue": "^3.4.0"
