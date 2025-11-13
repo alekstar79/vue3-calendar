@@ -4,19 +4,19 @@
   "description": "A modern, responsive, and customizable calendar component built with Vue 3 Composition API and TypeScript",
   "type": "module",
   "private": false,
-  "main": "./dist/calendar.umd.cjs",
-  "module": "./dist/calendar.es.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist-lib/calendar.umd.cjs",
+  "module": "./dist-lib/calendar.es.js",
+  "types": "./dist-lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/calendar.es.js",
-      "require": "./dist/calendar.umd.cjs"
+      "types": "./dist-lib/index.d.ts",
+      "import": "./dist-lib/calendar.es.js",
+      "require": "./dist-lib/calendar.umd.cjs"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist-lib/style.css": "./dist-lib/style.css"
   },
   "files": [
-    "dist-lib",
+    "dist-lib/*",
     "README.md"
   ],
   "engines": {
@@ -82,7 +82,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alekstar79/vue3-calendar.git"
+    "url": "git+https://github.com/alekstar79/vue3-calendar.git"
   },
   "bugs": {
     "url": "https://github.com/alekstar79/vue3-calendar/issues"
